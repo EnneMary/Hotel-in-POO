@@ -27,7 +27,7 @@ BEM-VINDO AO NOSSO HOTEL
                 print("\nCADASTRO DE QUARTO")
                 try:
                     id_quarto = int(input("Número do quarto:\n11~15, 21~25, 31-35, 41~45, 51~55, 61-65\n-> "))
-                    tipo, preco = Quarto.criarQuarto(id)
+                    tipo, preco = Quarto.criarQuarto(id_quarto)
                     
                     if(tipo == None or preco == None):
                         print("Numero de quarto inválido")
@@ -96,9 +96,12 @@ Quarto cadastrado
                     dias = int(input("Quantidade de dias: "))
                     nova_reserva.adicionarQuarto(quarto_encontrado, dias)
                     
-                    dao.salvar(nova_reserva)
-                    print("\nReserva criada e salva com sucesso")
-                    print(nova_reserva)
+                    if dao.salvar(nova_reserva):
+                         print("\nReserva criada e salva com sucesso")
+                         print(nova_reserva)
+                    else:
+                        print("Reserva já cadastrada")
+                   
 
                 except ValueError:
                     print("Erro: entrada inválida colocada")

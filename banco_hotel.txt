@@ -1,0 +1,10 @@
+HOSPEDE;4;juan;12124254554;20
+HOSPEDE;1;julio;12121212121;19
+HOSPEDE;3;jair;12121212121;20
+HOSPEDE;6;joaw;12121212121;21
+HOSPEDE;2;marcos;12121312121;19
+HOSPEDE;5;jorge;12121212121;45
+HOSPEDE;7;ew;12121232121;32
+QUARTO;11;quarto de casal - 1 cama de casal;100.0;True
+QUARTO;13;quarto de casal - 1 cama de casal;100.0;True
+QUARTO;12;quarto de casal - 1 cama de casal;100.0;True

@@ -6,7 +6,8 @@ from modelo.quarto import Quarto
 
 dao = EntidadeDAO()
 
-def Interface():
+class Interface:
+        
     while True:
         print(f'''
 BEM-VINDO AO NOSSO HOTEL
@@ -18,7 +19,9 @@ BEM-VINDO AO NOSSO HOTEL
 ''')
         
         opcao = int(input("Escolha uma opção: ")) 
-
+        if (1 > opcao and opcao < 5):
+            print("inválido")
+            continue
         match opcao:
             case 1:
                 print("\nCADASTRO DE QUARTO")
@@ -129,5 +132,3 @@ Quarto cadastrado
             case _:
                 print("Opção inválida!")
 
-if __name__ == "__main__":
-    Interface()

@@ -27,11 +27,8 @@ BEM-VINDO AO NOSSO HOTEL
                 print("\nCADASTRO DE QUARTO")
                 try:
                     id_quarto = int(input("Número do quarto:\n11~15, 21~25, 31-35, 41~45, 51~55, 61-65\n-> "))
-                    if(dao.buscar(Quarto,id_quarto)):
-                        print("Quarto já cadastrado")
-                        continue
-
                     tipo, preco = Quarto.criarQuarto(id)
+                    
                     if(tipo == None or preco == None):
                         print("Numero de quarto inválido")
                         continue

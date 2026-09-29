@@ -36,7 +36,7 @@ class EntidadeDAO:
             return False
 
         for item in conjunto_alvo:
-            if getattr(item, 'id', None) == getattr(entidade, 'id', None):
+            if item.id == entidade.id:
                 return False  
 
         conjunto_alvo.add(entidade)
@@ -62,6 +62,8 @@ class EntidadeDAO:
         self.persistir()
         return True
 
+
+                    tipo, preco 
     def buscar(self, tipo_classe, id_busca):
         conjunto_alvo = self.__obter_conjunto_por_tipo(tipo_classe)
         if conjunto_alvo is None:

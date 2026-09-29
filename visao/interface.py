@@ -88,7 +88,9 @@ Quarto cadastrado
                         print("Erro: quarto já ocupado")
                         continue
                     else:
-                        #atualiza o quarto para ocupado, true, se não estiver ocupado, pois o hospede esta realizando a reserva desse quarto
+                        #atualiza o quarto para ocupado, true
+                        #se não estiver ocupado, pq o hospede
+                        #esta realizando a reserva desse quarto
                         quarto_encontrado.ocupado = True
                         dao.atualizar(id_quartoreserva, quarto_encontrado)
 
@@ -97,10 +99,10 @@ Quarto cadastrado
                     nova_reserva.adicionarQuarto(quarto_encontrado, dias)
                     
                     if dao.salvar(nova_reserva):
-                         print("\nReserva criada e salva com sucesso")
+                         print("\nReserva criada com sucesso")
                          print(nova_reserva)
                     else:
-                        print("Reserva já cadastrada")
+                        print("Reserva não disponível")
                    
 
                 except ValueError:

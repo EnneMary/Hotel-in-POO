@@ -14,7 +14,7 @@ class EntidadeDAO:
 
         self.recuperar()
 
-    def DescobreTipoEntidade(self, entidade):
+    def descobreEntidade(self, entidade):
         if isinstance(entidade, Hospede):
             return self.hospedes
 
@@ -26,7 +26,7 @@ class EntidadeDAO:
 
         return None
 
-    def __obter_conjunto_por_tipo(self, tipo_classe):
+    def __conjuntoTipo(self, tipo_classe):
         if tipo_classe == Hospede:
             return self.hospedes
 
@@ -39,7 +39,7 @@ class EntidadeDAO:
         return None
 
     def salvar(self, entidade) -> bool:
-        conjunto_alvo = self.DescobreTipoEntidade(entidade)
+        conjunto_alvo = self.descobreEntidade(entidade)
 
         if conjunto_alvo is None:
             return False
@@ -54,7 +54,7 @@ class EntidadeDAO:
         return True
 
     def atualizar(self, id_procurar: int, entidade):
-        conjunto_alvo = self.DescobreTipoEntidade(entidade)
+        conjunto_alvo = self.descobreEntidade(entidade)
 
         if conjunto_alvo is None:
             return False
@@ -77,7 +77,7 @@ class EntidadeDAO:
         return True
 
     def buscar(self, tipo_classe, id_busca):
-        conjunto_alvo = self.__obter_conjunto_por_tipo(tipo_classe)
+        conjunto_alvo = self.__conjuntoTipo(tipo_classe)
 
         if conjunto_alvo is None:
             return None
@@ -89,79 +89,57 @@ class EntidadeDAO:
         return None
 
     def apagar(self, tipo_classe, id_busca):
-        conjunto_alvo = self.__obter_conjunto_por_tipo(tipo_classe)
+        conjunto_alvo = self.__conjuntoTipo(tipo_classe)
 
         if conjunto_alvo is None:
             return None
 
-        elemento_a_remover = None
+        remover_elemento = None
 
         for item in conjunto_alvo:
             if getattr(item, "id", None) == id_busca:
-                elemento_a_remover = item
+                remover_elemento = item
                 break
 
-        if elemento_a_remover is None:
+        if remover_elemento is None:
             return None
 
-        conjunto_alvo.remove(elemento_a_remover)
+        conjunto_alvo.remove(remover_elemento)
         self.persistir()
 
-        return elemento_a_remover
+        return remover_elemento
 
     def carregar(self, tipo_classe) -> list:
-        conjunto_alvo = self.__obter_conjunto_por_tipo(tipo_classe)
+        conjunto_alvo = self.__conjuntoTipo(tipo_classe)
 
         if conjunto_alvo is None:
             return []
 
-        return sorted(
-            list(conjunto_alvo),
-            key=lambda x: getattr(x, "id", 0)
-        )
+        return sorted(list(conjunto_alvo),key=lambda x: getattr(x, "id", 0))
 
     def persistir(self):
         with open(self.BancoHotel, "w", encoding="utf-8") as arquivo:
 
-            # =========================
-            # HÓSPEDES
-            # =========================
             for h in self.hospedes:
-                arquivo.write(
-                    f"HOSPEDE;{h.id};{h.nome};{h.cpf};{h.idade}\n"
-                )
+                arquivo.write(f"HOSPEDE;{h.id};{h.nome};{h.cpf};{h.idade}\n")
 
-            # =========================
-            # QUARTOS
-            # =========================
             for quarto in self.quartos:
-                arquivo.write(
-                    f"QUARTO;{quarto.id};{quarto.tipo};"
-                    f"{quarto.preco};{quarto.ocupado}\n"
-                )
+                arquivo.write(f"QUARTO;{quarto.id};{quarto.tipo};{quarto.preco};{quarto.ocupado}\n")
 
-            # =========================
-            # RESERVAS
-            # =========================
+
             for reserva in self.reservas:
 
                 itens = []
 
                 for item in reserva.itemreserva:
-                    itens.append(
-                        f"{item.quarto.id},{item.dias}"
-                    )
+                    itens.append(f"{item.quarto.id},{item.dias}")
 
                 if len(itens) == 0:
                     itens_txt = "SEM_ITENS"
                 else:
                     itens_txt = "|".join(itens)
 
-                arquivo.write(
-                    f"RESERVA;{reserva.id};"
-                    f"{reserva.hospede.id};"
-                    f"{itens_txt}\n"
-                )
+                arquivo.write(f"RESERVA;{reserva.id};{reserva.hospede.id};{itens_txt}\n")
 
     def recuperar(self):
         self.hospedes.clear()
@@ -204,14 +182,7 @@ class EntidadeDAO:
 
                     if hospede_existente is None:
 
-                        h = Hospede(
-                            id_hospede,
-                            str(dados[2]),
-                            str(dados[3]),
-                            1,
-                            int(dados[4])
-                        )
-
+                        h = Hospede(id_hospede,str(dados[2]),str(dados[3]),int(dados[4]))
                         self.hospedes.add(h)
 
                 elif tipo == "QUARTO":
@@ -234,12 +205,7 @@ class EntidadeDAO:
                         preco = float(dados[3])
                         ocupado = dados[4] == "True"
 
-                        q = Quarto(
-                            id_quarto=id_quarto,
-                            preco=preco,
-                            ocupado=ocupado,
-                            tipo=tipo_quarto
-                        )
+                        q = Quarto(id_quarto=id_quarto, preco=preco, ocupado=ocupado, tipo=tipo_quarto)
 
                         self.quartos.add(q)
 
@@ -252,9 +218,7 @@ class EntidadeDAO:
                     id_hospede = int(dados[2])
                     itens_txt = dados[3]
 
-                    # ---------------------------------------------
-                    # Verifica se a reserva já existe
-                    # ---------------------------------------------
+                    
                     reserva_existente = None
 
                     for r in self.reservas:
@@ -275,10 +239,7 @@ class EntidadeDAO:
                     if hospede_obj is None:
                         continue
 
-                    reserva_obj = Reserva(
-                        id_reserva,
-                        hospede_obj
-                    )
+                    reserva_obj = Reserva(id_reserva, hospede_obj)
 
                     if itens_txt != "SEM_ITENS":
 
@@ -305,10 +266,7 @@ class EntidadeDAO:
                                 continue
 
                             
-                            reserva_obj.adicionarQuarto(
-                                quarto_obj,
-                                dias
-                            )
+                            reserva_obj.adicionarQuarto(quarto_obj,dias)
 
                     
                     self.reservas.add(reserva_obj)

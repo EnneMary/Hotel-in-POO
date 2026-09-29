@@ -122,7 +122,7 @@ Quarto cadastrado
                     for q in quartos:
                         print(q)
 
-            # CASO 4: SAIR
+            
             #case 4:
 
             case 5:

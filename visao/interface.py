@@ -119,7 +119,36 @@ Quarto cadastrado
                         print(q)
 
             
-            #case 4:
+            case 4:
+                try:
+                    print(f'''
+1- Um Quarto cadastrado
+2- Ficha de um Hospede
+3- Uma Reserva cadastrada''')
+                
+                    opcao = int(input("Deseja excluir qual cadastro?  "))
+                    id = int(input("Informe o ID: "))
+                    if opcao == 1:
+                        if(dao.apagar(Quarto, id) is None):  
+                            print("ERRO: Quarto não identificado")
+
+                        else: print(f"Quarto {id} removido com sucesso!")
+
+                    if opcao == 2:
+                         if(dao.apagar(Hospede, id) is None):  
+                          print("ERRO: Hospede não identificado")
+                        
+                         else: print(f"Hospede {id} removido com sucesso!")
+                    
+                    if opcao == 3:
+                         if(dao.apagar(Reserva, id) is None):  
+                             print("ERRO: Reserva não identificado")
+                        
+                         else: print(f"Reserva {id} removido com sucesso!")
+
+                except ValueError:
+                    print("Erro: entrada inválida colocada")
+
 
             case 5:
                 print("Saindo do sistema...")

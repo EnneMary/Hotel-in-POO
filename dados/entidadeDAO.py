@@ -97,7 +97,7 @@ class EntidadeDAO:
         remover_elemento = None
 
         for item in conjunto_alvo:
-            if getattr(item, "id", None) == id_busca:
+            if item.id == id_busca:
                 remover_elemento = item
                 break
 
@@ -109,13 +109,22 @@ class EntidadeDAO:
 
         return remover_elemento
 
+
+
     def carregar(self, tipo_classe) -> list:
         conjunto_alvo = self.__conjuntoTipo(tipo_classe)
 
         if conjunto_alvo is None:
             return []
 
-        return sorted(list(conjunto_alvo),key=lambda x: getattr(x, "id", 0))
+        arrayorganizado = []
+
+        for item in conjunto_alvo:
+         arrayorganizado.append(item)
+
+        return arrayorganizado
+
+
 
     def persistir(self):
         with open(self.BancoHotel, "w", encoding="utf-8") as arquivo:

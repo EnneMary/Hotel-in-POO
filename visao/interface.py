@@ -26,10 +26,12 @@ BEM-VINDO AO NOSSO HOTEL
             case 1:
                 print("\nCADASTRO DE QUARTO")
                 try:
-                    id_quarto = int(input("ID do quarto: "))
-                    numero_quarto = int(input("Número do quarto:\n11~15, 21~25, 31-35, 41~45, 51~55, 61-65\n-> "))
-                    
-                    tipo, preco = Quarto.criarQuarto(numero_quarto)
+                    id_quarto = int(input("Número do quarto:\n11~15, 21~25, 31-35, 41~45, 51~55, 61-65\n-> "))
+                    if(dao.buscar(Quarto,id_quarto)):
+                        print("Quarto já cadastrado")
+                        continue
+
+                    tipo, preco = Quarto.criarQuarto(id)
                     if(tipo == None or preco == None):
                         print("Numero de quarto inválido")
                         continue
@@ -37,7 +39,6 @@ BEM-VINDO AO NOSSO HOTEL
                     novo_quarto = Quarto(
                         id_quarto = id_quarto,
                         preco = preco,
-                        numero = numero_quarto,
                         ocupado = False,
                         tipo = tipo,
                     )
@@ -79,32 +80,25 @@ Quarto cadastrado
                     print("\nCADASTRO DA RESERVA")
                     id_reserva = int(input("ID da reserva: "))
                     nova_reserva = Reserva(id_reserva, novo_hospede)
-
-
                     id_quartoreserva = int(input("ID do quarto cadastrado para a reserva: "))
+
                     quarto_encontrado = dao.buscar(Quarto, id_quartoreserva)
+                    if quarto_encontrado is None:
+                        print("ERRO: Quarto não encontrado")
+                        continue 
+
                     if quarto_encontrado.ocupado == True:
                         print("Erro: quarto já ocupado")
                         continue
                     else:
+                        #atualiza o quarto para ocupado, true, se não estiver ocupado, pois o hospede esta realizando a reserva desse quarto
                         quarto_encontrado.ocupado = True
                         dao.atualizar(id_quartoreserva, quarto_encontrado)
 
-            
-                    if quarto_encontrado is None:
-                        print("Quarto não encontrado no cadastro\nCriando quarto:")
-                        num_qnovo = int(input("Número do Quarto: "))
-                        tipo_qnovo, preco_qnovo = Quarto.criarQuarto(num_qnovo)
-                        quarto_encontrado = Quarto(id_quartoreserva, preco_qnovo, num_qnovo, True, tipo_qnovo)
-                        dao.salvar(quarto_encontrado)
 
                     dias = int(input("Quantidade de dias: "))
-
-                    if hasattr(nova_reserva, 'adicionarQuarto'):
-                        nova_reserva.adicionarQuarto(quarto_encontrado, dias)
-                    elif hasattr(nova_reserva, 'adicionar_item'):
-                        nova_reserva.adicionar_item(quarto_encontrado, dias)
-
+                    nova_reserva.adicionarQuarto(quarto_encontrado, dias)
+                    
                     dao.salvar(nova_reserva)
                     print("\nReserva criada e salva com sucesso")
                     print(nova_reserva)

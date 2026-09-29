@@ -142,7 +142,7 @@ class EntidadeDAO:
                         h = Hospede(id_hospede, str(dados[2]), str(dados[3]), 1, int(dados[4]))
                         self.hospedes.add(h)
 
-                elif tipo == "QUARTO":
+                if tipo == "QUARTO":
                     id_quarto = int(dados[1])
                     # SÓ ADICIONA SE O ID NÃO EXISTIR NO CONJUNTO
                     if not any(q.id == id_quarto for q in self.quartos):
@@ -156,34 +156,59 @@ class EntidadeDAO:
                         q = Quarto(
                             id_quarto=id_quarto,
                             preco=preco,
-                            numero=numero,
                             ocupado=ocupado,
                             tipo=tipo_q,
                         )
                         self.quartos.add(q)
 
-                elif tipo == "RESERVA":
-                    id_reserva = int(dados[1])
-                    id_hospede = int(dados[2])
-                    itens_txt = dados[3]
+                if tipo == "RESERVA":
+                    id_reserva = 0
+                    id_hospede = 0
+                    id_quarto = 0
+                    itens_txt = ''
 
-                    # SÓ ADICIONA SE O ID DA RESERVA NÃO EXISTIR NO CONJUNTO
-                    if any(r.id == id_reserva for r in self.reservas):
-                        continue
-
-                    hospede_obj = next((h for h in self.hospedes if h.id == id_hospede), None)
-
-                    if hospede_obj: 
+                    if len(dados) >=4:
+                        id_reserva = int(dados[1])
+                        id_hospede = int(dados[2])
+                        itens_txt = dados[3]
+    
+         # 1. VERIFICA SE A RESERVA JÁ EXISTE (Substituindo o 'any')
+                    reserva_ja_existe = False
+                    for r in self.reservas:
+                        if r.id == id_reserva:
+                            reserva_ja_existe = True
+                            break # Se achou, para o loop
+                
+                    if reserva_ja_existe:
+                        continue # Pula para a próxima linha do arquivo
+            
+                    # 2. BUSCA O HÓSPEDE (Substituindo o 'next')
+                    hospede_obj = None
+                    for h in self.hospedes:
+                        if h.id == id_hospede:
+                            hospede_obj = h
+                            break # Achou o hóspede, pode parar de procurar
+                
+                    # 3. SE O HÓSPEDE EXISTIR, CRIA A RESERVA E OS ITENS
+                    if hospede_obj != None:
                         reserva_obj = Reserva(id_reserva, hospede_obj)
-                        if itens_txt != "SEM_ITENS":
-                            pares = itens_txt.split("|")
-                            for par in pares:
-                                id_quarto, diarias = par.split(",")
-                                quarto_obj = next((q for q in self.quartos if q.id == int(id_quarto)), None)
-                                if quarto_obj:
-                                    if hasattr(reserva_obj, 'adicionarQuarto'):
-                                        reserva_obj.adicionarQuarto(quarto_obj, int(diarias))
-                                    elif hasattr(reserva_obj, 'adicionar_item'):
-                                        reserva_obj.adicionar_item(quarto_obj, int(diarias))
-
-                        self.reservas.add(reserva_obj)
+            
+                    if itens_txt != "SEM ITENS":
+                        pares = itens_txt.split("|")
+                        for par in pares:
+                            id_quarto, diarias = par.split(",")
+                    
+                    # 4. BUSCA O QUARTO (Substituindo o outro 'next')
+                    quarto_obj = None
+                    for q in self.quartos:
+                        if q.id == int(id_quarto):
+                            quarto_obj = q
+                            break # Achou o quarto, para o loop
+                            
+                    # 5. SE ACHOU O QUARTO, CRIA O ITEM E ADICIONA
+                    if quarto_obj != None:
+                        item_reserva = ItemReserva(quarto_obj, int(diarias))
+                        reserva_obj.adicionarQuarto(item_reserva)
+                        
+            # 6. ADICIONA A RESERVA PRONTA NO CONJUNTO DO SISTEMA
+            self.reservas.add(reserva_obj)

@@ -7,7 +7,7 @@ class Entidade (ABC):
         self.id = id                  
 
     @abstractmethod 
-    def __str__(self):
+    def __str__(self) -> str:
         pass
 
     

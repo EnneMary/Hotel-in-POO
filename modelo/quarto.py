@@ -1,10 +1,9 @@
 from .entidade import Entidade
 
 class Quarto(Entidade):
-    def __init__(self, id_quarto=None, preco=0.0, numero=0, ocupado=False, tipo=''):
+    def __init__(self, id_quarto=None, preco=0.0,ocupado=False, tipo=''):
         super().__init__(id_quarto)
         self.preco = preco
-        self.numero = numero
         self.tipo = tipo
         self.ocupado = ocupado
 
@@ -33,7 +32,6 @@ class Quarto(Entidade):
         return f'''
         ID: {self.id}
         DISPONIBILIDADE: [{status}]
-        NUMERO DO QUARTO: {self.numero}
         TIPO DO QUARTO: {self.tipo}
         PREÇO POR DIA: R${self.preco:.2f}
         '''

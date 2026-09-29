@@ -32,11 +32,11 @@ BEM-VINDO AO NOSSO HOTEL
                         continue
                     
                     novo_quarto = Quarto(
-                        id_quarto=id_quarto,
-                        preco=preco,
-                        numero=numero_quarto,
-                        ocupado=False,
-                        tipo=tipo,
+                        id_quarto = id_quarto,
+                        preco = preco,
+                        numero = numero_quarto,
+                        ocupado = False,
+                        tipo = tipo,
                     )
 
                     if dao.salvar(novo_quarto):

@@ -5,53 +5,28 @@ from modelo.reserva import Reserva
 
 
 class EntidadeDAO:
-    
-    def __init__(self):
-        self.BancoHotel = "banco_hotel.txt"
-        self.hospedes = set()
-        self.quartos = set()
-        self.reservas = set()
+    #O init é criado assim que vc cria um entidadeDAO
+    def __init__(self, classe, arquivo):
+      self.classe = classe
+      self.arquivo = arquivo
+      self.entidades = set()
 
-        self.recuperar()
+      self.recuperar()
+      #Assim que vc cria um entidade dao, como no banco, ele pede a classe e o arquivo da entidade
+      #  e cria um conjunto entidade onde os objetos serão armazenados
 
-    def descobreEntidade(self, entidade):
-        if isinstance(entidade, Hospede):
-            return self.hospedes
 
-        elif isinstance(entidade, Quarto):
-            return self.quartos
-
-        elif isinstance(entidade, Reserva):
-            return self.reservas
-
-        return None
-
-    def __conjuntoTipo(self, tipo_classe):
-        if tipo_classe == Hospede:
-            return self.hospedes
-
-        elif tipo_classe == Quarto:
-            return self.quartos
-
-        elif tipo_classe == Reserva:
-            return self.reservas
-
-        return None
 
     def salvar(self, entidade) -> bool:
-        conjunto_alvo = self.descobreEntidade(entidade)
+        #Verifica se o id daquele objeto já existe
+        if self.buscar(entidade.id) is not None:
+         return False
 
-        if conjunto_alvo is None:
-            return False
-
-        for item in conjunto_alvo:
-            if item.id == entidade.id:
-                return False
-
-        conjunto_alvo.add(entidade)
-        self.persistir()
+        #Salva no conjunto 
+        self.entidades.add(entidade)
 
         return True
+    
 
     def atualizar(self, id_procurar: int, entidade):
         conjunto_alvo = self.descobreEntidade(entidade)
@@ -77,7 +52,7 @@ class EntidadeDAO:
         return True
 
     def buscar(self, tipo_classe, id_busca):
-        conjunto_alvo = self.__conjuntoTipo(tipo_classe)
+        conjunto_alvo = self.descobreEntidade(tipo_classe)
 
         if conjunto_alvo is None:
             return None
@@ -89,7 +64,7 @@ class EntidadeDAO:
         return None
 
     def apagar(self, tipo_classe, id_busca):
-        conjunto_alvo = self.__conjuntoTipo(tipo_classe)
+        conjunto_alvo = self.descobreEntidade(tipo_classe)
 
         if conjunto_alvo is None:
             return None
@@ -112,7 +87,7 @@ class EntidadeDAO:
 
 
     def carregar(self, tipo_classe) -> list:
-        conjunto_alvo = self.__conjuntoTipo(tipo_classe)
+        conjunto_alvo = self.descobreEntidade(tipo_classe)
 
         if conjunto_alvo is None:
             return []
@@ -124,19 +99,21 @@ class EntidadeDAO:
 
         return arrayorganizado
 
-
+ 
 
     def persistir(self):
-        with open(self.BancoHotel, "w", encoding="utf-8") as arquivo:
+        with open(self.arquivo, "w", encoding="utf-8") as arquivo:
 
-            for h in self.hospedes:
+            if self.classe == Hospede:
+             for h in self.hospedes:
                 arquivo.write(f"HOSPEDE;{h.id};{h.nome};{h.cpf};{h.idade}\n")
-
-            for quarto in self.quartos:
+            
+            if self.classe == Quarto:
+             for quarto in self.quartos:
                 arquivo.write(f"QUARTO;{quarto.id};{quarto.tipo};{quarto.preco};{quarto.ocupado}\n")
 
-
-            for reserva in self.reservas:
+            if self.classe == Quarto:
+             for reserva in self.reservas:
 
                 itens = []
 
@@ -151,18 +128,11 @@ class EntidadeDAO:
                 arquivo.write(f"RESERVA;{reserva.id};{reserva.hospede.id};{itens_txt}\n")
 
     def recuperar(self):
-        self.hospedes.clear()
-        self.quartos.clear()
-        self.reservas.clear()
 
-        if not os.path.exists(self.BancoHotel):
+        if not os.path.exists(self.arquivo):
             return
 
-        with open(
-            self.BancoHotel,
-            "r",
-            encoding="utf-8"
-        ) as arquivo:
+        with open(self.arquivo,"r",encoding="utf-8") as arquivo:
 
             for linha in arquivo:
 
@@ -173,9 +143,9 @@ class EntidadeDAO:
 
                 dados = linha.split(";")
 
-                tipo = dados[0]
 
-                if tipo == "HOSPEDE":
+
+                if self.classe == Hospede:
 
                     if len(dados) < 5:
                         continue
@@ -194,7 +164,7 @@ class EntidadeDAO:
                         h = Hospede(id_hospede,str(dados[2]),str(dados[3]),int(dados[4]))
                         self.hospedes.add(h)
 
-                elif tipo == "QUARTO":
+                elif self.classe == Quarto:
 
                     if len(dados) < 5:
                         continue
@@ -218,7 +188,7 @@ class EntidadeDAO:
 
                         self.quartos.add(q)
 
-                elif tipo == "RESERVA":
+                elif self.classe == Reserva:
 
                     if len(dados) < 4:
                         continue

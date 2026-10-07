@@ -1,15 +1,17 @@
 import os
-from dados.entidadeDAO import EntidadeDAO
+from dados.Banco import Banco
 from modelo.hospede import Hospede
 from modelo.reserva import Reserva
 from modelo.quarto import Quarto
 
-dao = EntidadeDAO()
 
 class Interface:
-        
-    while True:
-        print(f'''
+    def __init__(self):
+            self.banco = Banco
+
+    def executar():      
+             while True:
+                 print(f'''
 BEM-VINDO AO NOSSO HOTEL
     1- Cadastrar quarto
     2- Check-in
@@ -18,142 +20,151 @@ BEM-VINDO AO NOSSO HOTEL
     5- Sair
 ''')
         
-        opcao = int(input("Escolha uma opção: ")) 
-        if (1 > opcao and opcao < 5):
+    opcao = int(input("Escolha uma opção: ")) 
+    if (1 > opcao and opcao < 5):
             print("inválido")
             continue
-        match opcao:
-            case 1:
-                print("\nCADASTRO DE QUARTO")
-                try:
-                    id_quarto = int(input("Número do quarto:\n11~15, 21~25, 31-35, 41~45, 51~55, 61-65\n-> "))
-                    tipo, preco = Quarto.criarQuarto(id_quarto)
-                    
-                    if(tipo == None or preco == None):
-                        print("Numero de quarto inválido")
-                        continue
-                    
-                    novo_quarto = Quarto(
-                        id_quarto = id_quarto,
-                        preco = preco,
-                        ocupado = False,
-                        tipo = tipo,
-                    )
 
-                    if dao.salvar(novo_quarto):
-                        print(f'''
+    match opcao:
+        case 1:
+            print("\nCADASTRO DE QUARTO")
+            try:
+                id_quarto = int(input("Número do quarto:\n11~15, 21~25, 31-35, 41~45, 51~55, 61-65\n-> "))
+                tipo, preco = Quarto.criarQuarto(id_quarto)
+                
+                if(tipo == None or preco == None):match opcao:
+        case 1:
+            print("\nCADASTRO DE QUARTO")
+            try:
+                id_quarto = int(input("Número do quar"))
+                print("Numero de quarto inválido")
+                continue
+                
+                novo_quarto = Quarto(
+                    id_quarto = id_quarto,
+                    preco = preco,
+                    ocupado = False,
+                    tipo = tipo,
+                )
+
+                if self.banco.hospedes.salvar(novo_quarto):
+                    print(f'''match opcao:
+        case 1:
+            print("\nCADASTRO DE QUARTO")
+            try:
+                id_quarto = int(input("Número do quar
 Quarto cadastrado
-    Tipo: {tipo}
-    Preço da diária: R$ {preco:.2f}''')
+Tipo: {tipo}
+Preço da diária: R$ {preco:.2f}''')
 
-                    else:
-                        print(" Erro: ID já cadastrado")
-                    
-                except ValueError:
-                    print("Erro: digite apenas números")
-
-            case 2:
-                print("\nCADASTRO DO HÓSPEDE")
-                try:
-                    id_hospede = int(input("ID do Hóspede: "))
-                    nome = input("Nome: ")
-                    idade = int(input("Idade: "))
-
-                    if not Hospede.verificaIdade(idade):
-                        print("Você não pode completar o cadastro por ser menor de idade")
-                        continue
-
-                    cpf = input("CPF: ")
-                    while len(cpf) != 11:
-                        cpf = input("CPF Inválido. Digite novamente: ")
-
-                    quantidade = int(input("Quantidade de pessoas: "))
-
-                    novo_hospede = Hospede(id_hospede, nome, cpf, quantidade, idade)
-                    if not dao.salvar(novo_hospede):
-                        print("Erro: ID já cadastrado")
-                        continue
-
-                    print("\nCADASTRO DA RESERVA")
-                    id_reserva = int(input("ID da reserva: "))
-                    nova_reserva = Reserva(id_reserva, novo_hospede)
-                    id_quartoreserva = int(input("ID do quarto cadastrado para a reserva: "))
-
-                    quarto_encontrado = dao.buscar(Quarto, id_quartoreserva)
-                    if quarto_encontrado is None:
-                        print("ERRO: Quarto não encontrado")
-                        continue 
-
-                    if quarto_encontrado.ocupado == True:
-                        print("Erro: quarto já ocupado")
-                        continue
-                    else:
-                        #atualiza o quarto para ocupado, true
-                        #se não estiver ocupado, pq o hospede
-                        #esta realizando a reserva desse quarto
-                        quarto_encontrado.ocupado = True
-                        dao.atualizar(id_quartoreserva, quarto_encontrado)
-
-
-                    dias = int(input("Quantidade de dias: "))
-                    nova_reserva.adicionarQuarto(quarto_encontrado, dias)
-                    
-                    if dao.salvar(nova_reserva):
-                         print("\nReserva criada com sucesso")
-                         print(nova_reserva)
-                    else:
-                        print("Reserva não disponível")
-                   
-
-                except ValueError:
-                    print("Erro: entrada inválida colocada")
-
-
-            case 3:
-                print("\nQUARTOS CADASTRADOS")
-                quartos = dao.carregar(Quarto)
-                if not quartos:
-                    print("Nenhum quarto cadastrado até o momento ")
                 else:
-                    for q in quartos:
-                        print(q)
+                    print(" Erro: ID já cadastrado")
+                
+            except ValueError:
+                print("Erro: digite apenas números")
 
-            
-            case 4:
-                try:
-                    print(f'''
+        case 2:
+            print("\nCADASTRO DO HÓSPEDE")
+            try:
+                id_hospede = int(input("ID do Hóspede: "))
+                nome = input("Nome: ")
+                idade = int(input("Idade: "))
+
+                if not Hospede.verificaIdade(idade):
+                    print("Você não pode completar o cadastro por ser menor de idade")
+                    continue
+
+                cpf = input("CPF: ")
+                while len(cpf) != 11:
+                    cpf = input("CPF Inválido. Digite novamente: ")
+
+                quantidade = int(input("Quantidade de pessoas: "))
+
+                novo_hospede = Hospede(id_hospede, nome, cpf, quantidade, idade)
+                if not dao.salvar(novo_hospede):
+                    print("Erro: ID já cadastrado")
+                    continue
+
+                print("\nCADASTRO DA RESERVA")
+                id_reserva = int(input("ID da reserva: "))
+                nova_reserva = Reserva(id_reserva, novo_hospede)
+                id_quartoreserva = int(input("ID do quarto cadastrado para a reserva: "))
+
+                quarto_encontrado = dao.buscar(Quarto, id_quartoreserva)
+                if quarto_encontrado is None:
+                    print("ERRO: Quarto não encontrado")
+                    continue 
+
+                if quarto_encontrado.ocupado == True:
+                    print("Erro: quarto já ocupado")
+                    continue
+                else:
+                    #atualiza o quarto para ocupado, true
+                    #se não estiver ocupado, pq o hospede
+                    #esta realizando a reserva desse quarto
+                    quarto_encontrado.ocupado = True
+                    dao.atualizar(id_quartoreserva, quarto_encontrado)
+
+
+                dias = int(input("Quantidade de dias: "))
+                nova_reserva.adicionarQuarto(quarto_encontrado, dias)
+                
+                if dao.salvar(nova_reserva):
+                        print("\nReserva criada com sucesso")
+                        print(nova_reserva)
+                else:
+                    print("Reserva não disponível")
+                
+
+            except ValueError:
+                print("Erro: entrada inválida colocada")
+
+
+        case 3:
+            print("\nQUARTOS CADASTRADOS")
+            quartos = dao.carregar(Quarto)
+            if not quartos:
+                print("Nenhum quarto cadastrado até o momento ")
+            else:
+                for q in quartos:
+                    print(q)
+
+        
+        case 4:
+            try:
+                print(f'''
 1- Um Quarto cadastrado
 2- Ficha de um Hospede
 3- Uma Reserva cadastrada''')
-                
-                    opcao = int(input("Deseja excluir qual cadastro?  "))
-                    id = int(input("Informe o ID: "))
-                    if opcao == 1:
-                        if(dao.apagar(Quarto, id) is None):  
-                            print("ERRO: Quarto não identificado")
+            
+                opcao = int(input("Deseja excluir qual cadastro?  "))
+                id = int(input("Informe o ID: "))
+                if opcao == 1:
+                    if(dao.apagar(Quarto, id) is None):  
+                        print("ERRO: Quarto não identificado")
 
-                        else: print(f"Quarto {id} removido com sucesso!")
+                    else: print(f"Quarto {id} removido com sucesso!")
 
-                    if opcao == 2:
-                         if(dao.apagar(Hospede, id) is None):  
-                          print("ERRO: Hospede não identificado")
-                        
-                         else: print(f"Hospede {id} removido com sucesso!")
+                if opcao == 2:
+                        if(dao.apagar(Hospede, id) is None):  
+                        print("ERRO: Hospede não identificado")
                     
-                    if opcao == 3:
-                         if(dao.apagar(Reserva, id) is None):  
-                             print("ERRO: Reserva não identificado")
-                        
-                         else: print(f"Reserva {id} removido com sucesso!")
+                        else: print(f"Hospede {id} removido com sucesso!")
+                
+                if opcao == 3:
+                        if(dao.apagar(Reserva, id) is None):  
+                            print("ERRO: Reserva não identificado")
+                    
+                        else: print(f"Reserva {id} removido com sucesso!")
 
-                except ValueError:
-                    print("Erro: entrada inválida colocada")
+            except ValueError:
+                print("Erro: entrada inválida colocada")
 
 
-            case 5:
-                print("Saindo do sistema...")
-                break
+        case 5:
+            print("Saindo do sistema...")
+            break
 
-            case _:
-                print("Opção inválida!")
+        case _:
+            print("Opção inválida!")
 

@@ -36,18 +36,25 @@ janela = tk.Tk()
 janela.title("Hotel")
 janela.geometry("500x400")
 
-tela1 = tk.Frame(janela)
-tela1.pack(fill="both", expand= True)
 
-texto = tk.Label(tela1, text="Bem vindo ao Hotel!")
-texto.pack()
+tela1 = tk.Frame(janela, bg="#4b3c29")
+tela1.pack(fill="both", expand= True )
+
+texto = tk.Label(tela1, text="Bem vindo ao Hotel!", bg="#a948b9", font=('Arial', '15', 'italic', 'bold'),padx=20, pady=10)
+texto.place(relx=0.5, rely=0.15, anchor="e")
+#texto.pack(pady=0)
+ #'Arial', size='12', type='italic', type='bold'
 
 botaoH = tk.Button(tela1, text="Hospede", command=BHospede)
-botaoH.pack()
+botaoH = tk.Button(tela1,text="Hospede", command=BHospede, bg="#b7b948", font=('Arial', '10', 'italic', 'bold'), padx=20, pady=10)
+botaoH.place(relx=0.24, rely=0.3, anchor="e")
 botaoQ = tk.Button(tela1, text="Quarto", command=BQuarto)
-botaoQ.pack()
+botaoQ = tk.Button(tela1,text="Quarto", command=BQuarto, bg="#b7b948", font=('Arial', '10', 'italic', 'bold'), padx=20, pady=10)
+botaoQ.place(relx=0.24, rely=0.45, anchor="e")
 botaoR = tk.Button(tela1, text="Reserva", command=BReserva)
-botaoR.pack()
+botaoR = tk.Button(tela1,text="Reserva", command=BReserva, bg="#b7b948", font=('Arial', '10', 'italic', 'bold'), padx=20, pady=10)
+botaoR.place(relx=0.24, rely=0.6, anchor="e")
+
 
 janela.protocol("WM_DELETE_WINDOW", AcaoX)
 janela.mainloop()

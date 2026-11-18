@@ -35,7 +35,8 @@ def BReserva():
 janela = tk.Tk()
 janela.title("Hotel")
 janela.geometry("500x400")
-
+janela.config()
+#mudanca
 
 tela1 = tk.Frame(janela, bg="#4b3c29")
 tela1.pack(fill="both", expand= True )

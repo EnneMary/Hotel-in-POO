@@ -35,26 +35,32 @@ def BReserva():
 janela = tk.Tk()
 janela.title("Hotel")
 janela.geometry("500x400")
-janela.config()
-#mudanca
+
 
 tela1 = tk.Frame(janela, bg="#4b3c29")
 tela1.pack(fill="both", expand= True )
 
-texto = tk.Label(tela1, text="Bem vindo ao Hotel!", bg="#a948b9", font=('Arial', '15', 'italic', 'bold'),padx=20, pady=10)
-texto.place(relx=0.5, rely=0.15, anchor="e")
+menu_branco = tk.Frame(tela1,bg="#f7ecde", width=10000) #width = largura
+menu_branco.place(relx=0, rely=0, width=150, relwidth=0.1, relheight=1, anchor="nw")
+#relx=largura da area branca, rely=onde "começa a altura"
+#relwidth=aumentar a largura quando aumentar a janela
+#relheight= preencher a altura inteira 
+
+texto = tk.Label(tela1, text="Bem vindo ao Hotel!", bg="#a948b9", font=('Arial', '20', 'italic', 'bold'),padx=20, pady=10)
+texto.place(relx=0.5, rely=0.8, anchor="nw")
 #texto.pack(pady=0)
  #'Arial', size='12', type='italic', type='bold'
 
-botaoH = tk.Button(tela1, text="Hospede", command=BHospede)
-botaoH = tk.Button(tela1,text="Hospede", command=BHospede, bg="#b7b948", font=('Arial', '10', 'italic', 'bold'), padx=20, pady=10)
-botaoH.place(relx=0.24, rely=0.3, anchor="e")
-botaoQ = tk.Button(tela1, text="Quarto", command=BQuarto)
-botaoQ = tk.Button(tela1,text="Quarto", command=BQuarto, bg="#b7b948", font=('Arial', '10', 'italic', 'bold'), padx=20, pady=10)
-botaoQ.place(relx=0.24, rely=0.45, anchor="e")
-botaoR = tk.Button(tela1, text="Reserva", command=BReserva)
-botaoR = tk.Button(tela1,text="Reserva", command=BReserva, bg="#b7b948", font=('Arial', '10', 'italic', 'bold'), padx=20, pady=10)
-botaoR.place(relx=0.24, rely=0.6, anchor="e")
+
+botaoH = tk.Button(menu_branco, text="Hospede", command=BHospede)
+botaoH = tk.Button(menu_branco,text="Hospede", command=BHospede, bg="#b7b948", font=('Arial', '10', 'italic', 'bold'), padx=50, pady=10)
+botaoH.place(relx = 0.1, rely=0.3, anchor="w")
+botaoQ = tk.Button(menu_branco, text="Quarto", command=BQuarto)
+botaoQ = tk.Button(menu_branco,text="Quarto", command=BQuarto, bg="#b7b948", font=('Arial', '10', 'italic', 'bold'), padx=50, pady=10)
+botaoQ.place(relx=0.1, rely=0.5, anchor="w")
+botaoR = tk.Button(menu_branco, text="Reserva", command=BReserva)
+botaoR = tk.Button(menu_branco,text="Reserva", command=BReserva, bg="#b7b948", font=('Arial', '10', 'italic', 'bold'), padx=50, pady=10)
+botaoR.place(relx=0.1, rely=0.7, anchor="w")
 
 
 janela.protocol("WM_DELETE_WINDOW", AcaoX)

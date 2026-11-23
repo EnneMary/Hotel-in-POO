@@ -21,12 +21,20 @@ class EntidadeDAO:
         #Verifica se o id daquele objeto já existe
         if self.buscar(entidade.id) is not None:
          return False
-
-        #Salva no conjunto 
+        
+        entidade.id = self.gerarId()
         self.entidades.add(entidade)
+        self.persistir()
 
         return True
-    
+
+
+    def gerarId(self):
+     if len(self.entidades) == 0:
+        return 1
+
+     return max(entidade.id for entidade in self.entidades) + 1
+
 
     def atualizar(self, id_procurar: int, entidade):
         conjunto_alvo = self.descobreEntidade(entidade)
@@ -51,17 +59,12 @@ class EntidadeDAO:
 
         return True
 
-    def buscar(self, tipo_classe, id_busca):
-        conjunto_alvo = self.descobreEntidade(tipo_classe)
+    def buscar(self, id_busca):
+     for item in self.entidades:
+        if item.id == id_busca:
+            return item
 
-        if conjunto_alvo is None:
-            return None
-
-        for item in conjunto_alvo:
-            if getattr(item, "id", None) == id_busca:
-                return item
-
-        return None
+     return None
 
     def apagar(self, tipo_classe, id_busca):
         conjunto_alvo = self.descobreEntidade(tipo_classe)
@@ -105,8 +108,9 @@ class EntidadeDAO:
         with open(self.arquivo, "w", encoding="utf-8") as arquivo:
 
             if self.classe == Hospede:
-             for h in self.hospedes:
-                arquivo.write(f"HOSPEDE;{h.id};{h.nome};{h.cpf};{h.idade}\n")
+             for h in self.entidades:
+                arquivo.write(
+                    f"HOSPEDE;{h.id};{h.nome};{h.cpf};{h.idade}\n")
             
             if self.classe == Quarto:
              for quarto in self.quartos:
@@ -135,26 +139,16 @@ class EntidadeDAO:
         with open(self.arquivo,"r",encoding="utf-8") as arquivo:
 
             for linha in arquivo:
-
                 linha = linha.strip()
-
                 if not linha:
                     continue
-
                 dados = linha.split(";")
-
-
-
                 if self.classe == Hospede:
-
                     if len(dados) < 5:
                         continue
-
                     id_hospede = int(dados[1])
-
                     hospede_existente = None
-
-                    for h in self.hospedes:
+                    for h in self.entidades:
                         if h.id == id_hospede:
                             hospede_existente = h
                             break
@@ -162,7 +156,7 @@ class EntidadeDAO:
                     if hospede_existente is None:
 
                         h = Hospede(id_hospede,str(dados[2]),str(dados[3]),int(dados[4]))
-                        self.hospedes.add(h)
+                        self.entidades.add(h)
 
                 elif self.classe == Quarto:
 
